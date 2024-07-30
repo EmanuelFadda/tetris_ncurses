@@ -58,11 +58,12 @@ void Leaderboard::show() {
     }else{
         if (!checkOrderArray(scores,size,false)){
             orderScore(names,scores,size);
-            resetLeaderboard();
+            deleteScore();
             int i=0;
             //corregge l'ordine nel file dei punteggi
             while(i<size){
                 saveScore(names[i],scores[i]);
+                i++;
             }
         }
         printCentered(stdscr, 1, "Leaderboard");
@@ -72,6 +73,8 @@ void Leaderboard::show() {
         //attende fino a un output
         timeout(-1);
         char c=getch();
+
+        // da creare menù
         if(c=='d'|| c=='D'){
             resetLeaderboard();
         }

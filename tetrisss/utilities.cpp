@@ -71,7 +71,6 @@ bool loadScores(char names[][14], int scores[], int& size) {
     bool fileExist=file.good();
     if(fileExist){
         file.open("leaderboard.txt");
-        //controllo se sono o non ordinati
         while (file >> names[size] >> scores[size]) {
             size++;
         }
@@ -93,7 +92,7 @@ bool checkOrderArray(int array[],int size, bool ascending){
                 ordered=false;
             }
         }
-
+        i++;
     }
     return ordered;
 }
