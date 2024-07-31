@@ -1,5 +1,3 @@
-class Game;
-
 class Menu {
     public:
         Menu();

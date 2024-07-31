@@ -168,8 +168,9 @@ void orderScore(char names[][14],int scores[],int size){
 void deleteScore(){
     ofstream file("leaderboard.txt", ofstream::out | ofstream::trunc);
 }
-int createMenu(const char* choices[], int n_choices){
+int createMenu(const char* choices[], int n_choices, int y){
     int highlight = 0;
+    
     while (1) {
         //creazione
         clear();
@@ -177,7 +178,7 @@ int createMenu(const char* choices[], int n_choices){
             if (i == highlight) {
                 attron(A_REVERSE);
             }
-            printCentered(stdscr, i + 1, choices[i]);
+            printCentered(stdscr, i + y , choices[i]);
             attroff(A_REVERSE);
         }
 

@@ -45,7 +45,7 @@ void Menu::logo() {
     attroff(COLOR_PAIR(1));
     timeout(5000);
 
-    printCentered(stdscr, 20, "Press any key to show the menu'...");
+    printCentered(stdscr, 20, "Press any key to show the menu' ...");
     timeout(-1);
     getch();
 }
@@ -60,9 +60,9 @@ int Menu::show() {
     WINDOW* win = newwin(0, 0, 0, 0);
 
     refresh();
-    int n_choices=3;
-    const char* choices[n_choices] = {"Play", "Leaderboard", "Exit"};
-    int choice=createMenu(choices,n_choices);
+    int n_choices=4;
+    const char* choices[n_choices] = {"[[ Play ]]", "[[Leaderboard]]","[[ Tutorial ]]", "[[ Exit ]]"};
+    int choice=createMenu(choices,n_choices,10);
     return choice;
 
 }

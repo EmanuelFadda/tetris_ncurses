@@ -69,6 +69,7 @@ void Leaderboard::show() {
         printCentered(stdscr, 1, "Leaderboard");
         printTable(stdscr, 3, -1, names, scores, size);
         attron(A_REVERSE);
+        printCentered(stdscr,getmaxy(win)/2,"Press [d] to delete your scores" );
         attroff(A_REVERSE);
         //attende fino a un output
         timeout(-1);
@@ -98,8 +99,9 @@ void Leaderboard::resetLeaderboard(){
 
 
     int n_choices=2;
-    const char* choices[n_choices]={"CONFIRM", "Exit"};
-    int choice=createMenu(choices,n_choices);
+    
+    const char* choices[n_choices]={"[[ CONFIRM ]]", "[[ Exit ]]"};
+    int choice=createMenu(choices,n_choices,10);
     
     if(choice==0){
         deleteScore();

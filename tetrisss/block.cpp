@@ -21,6 +21,7 @@ Block::Block(int y, int x, int type) {
     this->x = x;
     this->y = y;
 
+    //setting coordinates for each sub-block
     switch (type){
     case 0:
             // [][]

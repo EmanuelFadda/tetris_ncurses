@@ -12,7 +12,8 @@ all_done:
 	g++ -c menu.cpp
 	g++ -c leaderboard.cpp
 	g++ -c utilities.cpp
-	g++ -o main main.o game.o block.o menu.o leaderboard.o utilities.o -lncurses
+	g++ -c tutorial.cpp
+	g++ -o main main.o game.o block.o menu.o leaderboard.o utilities.o tutorial.o -lncurses
 	rm *.o
 	
 main.o: main.cpp

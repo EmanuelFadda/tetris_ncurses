@@ -2,6 +2,7 @@
 #include "headers/game.hpp"
 #include "headers/menu.hpp"
 #include "headers/leaderboard.hpp"
+#include "headers/tutorial.hpp"
 
 using namespace std;
 
@@ -16,18 +17,20 @@ int main() {
     Menu menu;
     Game game(HEIGHT_GAME, WIDTH_GAME, STARTY_GAME, STARTX_GAME);
     Leaderboard leaderboard;
-
+    Tutorial tutorial;
     menu.logo();
 
 
     int choice;
-    while ((choice = menu.show()) != 2) {
+    while ((choice = menu.show()) != 3) {
         if (choice == 0) {
             game.running = true;
             game.getName();
             game.show();
         } else if (choice == 1) {
             leaderboard.show();
+        }else if(choice == 2){
+            tutorial.show();
         }
     }
 
@@ -44,7 +47,6 @@ int main() {
 // implement Game::gameOver() -> reset game
 // implement Game::pause() -> optional feature
 // implement Game::resume() -> optional feature
-// modify design of Game grid
 // try solve delay issue
 // add time and lines cleared to Game
 // implement tutorial
