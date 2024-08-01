@@ -38,7 +38,7 @@ int main() {
     menu.hide();
     game.hide();
     leaderboard.hide();
-
+    tutorial.hide();
     return 0;
 }
 

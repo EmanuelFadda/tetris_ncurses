@@ -35,7 +35,7 @@ class Game {
         void eraseLines(int board[][10]);
         void drawBoard(WINDOW* win);
         void getName();
-        void gameOver();
+        void gameOver(bool wasPaused);
         void show();
         void hide();
 };

@@ -62,7 +62,7 @@ int Menu::show() {
     refresh();
     int n_choices=4;
     const char* choices[n_choices] = {"[[ Play ]]", "[[Leaderboard]]","[[ Tutorial ]]", "[[ Exit ]]"};
-    int choice=createMenu(choices,n_choices,10);
+    int choice=createMenu(choices,n_choices,10,"  MENU'  ");
     return choice;
 
 }

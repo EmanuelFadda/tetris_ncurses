@@ -3,14 +3,23 @@
 #include "headers/game.hpp"
 #include "headers/block.hpp"
 #include "headers/utilities.hpp"
-
+#include "headers/tutorial.hpp"
 using namespace std;
 
-const char TOP_BORDER = ' ';
-const char BOTTOM_BORDER = '=';
-const char LEFT_BORDER = '<';
-const char RIGHT_BORDER = '>';
-const char CORNER_BORDER = '+';
+//char used to write a board
+const char ASCII_TOP_BORDER = ' ';
+const char ASCII_BOTTOM_BORDER = '=';
+const char ASCII_LEFT_BORDER = '<';
+const char ASCII_RIGHT_BORDER = '>';
+const char ASCII_CORNER_BORDER = '+';
+
+//int code left,right border
+const int RIGHT_BORDER=1,LEFT_BORDER=0;
+
+const int n_choices=3;
+const char* choices[n_choices]={"[[ Continue ]]","[[ Commands ]]", "[[ Exit ]]"};
+int choice;
+
 
 /*
 function: Game
@@ -116,13 +125,8 @@ description: displays the game over screen and saves the user's score
 
 @return void
 */
-void Game::gameOver() {
-    saveScore(this->name, this->score);
-
+void Game::gameOver(bool wasPaused) {
     clear();
-    printCentered(stdscr, getmaxy(stdscr) / 2, "Game Over!");
-    mvprintw(getmaxy(stdscr) / 2 + 1, getmaxx(stdscr) / 2 - 9, "Your score: %d", this->score);
-    printCentered(stdscr, getmaxy(stdscr) / 2 + 3, "Press any key to continue...");
 
     this->score = 0;
     this->running = true;
@@ -131,7 +135,16 @@ void Game::gameOver() {
             this->board[i][j] = 0;
         }
     }
+    printCentered(stdscr, getmaxy(stdscr) / 2, "Game Over!");
+
+    if(!wasPaused){
+        saveScore(this->name, this->score);
+        mvprintw(getmaxy(stdscr) / 2 + 1, getmaxx(stdscr) / 2 - 9, "Your score: %d", this->score);
+    }
+    printCentered(stdscr, getmaxy(stdscr) / 2 + 3, "Press any key to continue...");
+    getch();
 }
+
 
 /*
 function: show
@@ -165,7 +178,7 @@ void Game::show() {
     refresh();
     
 
-    wborder(game, LEFT_BORDER, RIGHT_BORDER, TOP_BORDER, BOTTOM_BORDER, CORNER_BORDER, CORNER_BORDER, CORNER_BORDER, CORNER_BORDER);
+    wborder(game, ASCII_LEFT_BORDER, ASCII_RIGHT_BORDER, ASCII_TOP_BORDER, ASCII_BOTTOM_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER);
 
     wrefresh(game);
 
@@ -175,7 +188,7 @@ void Game::show() {
         if (block.checkCollision(this->board)) {
             // if the block has collided with another block and is at the top of the board, the game is over
             if (block.getY() == 0) {
-                this->gameOver();
+                this->gameOver(false);
             }
 
             // change blocks' values from 2 to 1 (from active to inactive)
@@ -219,16 +232,51 @@ void Game::show() {
         c = getch();
         switch (c) {
             case 'a':
-                if (!block.checkWall(this->board, 0)) block.move(0, -1, this->board);
+                if (!block.checkWall(this->board, LEFT_BORDER)) block.move(1, -1, this->board);
                 break;
             case 'd':
-                if (!block.checkWall(this->board, 1)) block.move(0, 1, this->board);
+                if (!block.checkWall(this->board, RIGHT_BORDER)) block.move(1, 1, this->board);
                 break;
             case 's':
                 block.move(1, 0, this->board);
                 break;
             case 'm':
-                this->running = false; // fix this (should reset the game)
+                timeout(-1);
+                do{
+                    choice=createMenu(choices,n_choices,5,"  PAUSE  ");
+                    if(choice==1){
+                        clear();
+                        int y=11;
+                        
+                        attron(A_REVERSE);
+                        printCentered(stdscr,y,"Commands");
+                        attroff(A_REVERSE);
+                        
+                        mvwprintw(stdscr,y,28,"[a]: move left");
+                        mvwprintw(stdscr,y,28+28,"[d]: move right");
+                        mvwprintw(stdscr,y,28+50,"[s]: move down");
+                        mvwprintw(stdscr,y+2,28,"[q]: rotate right");
+                        mvwprintw(stdscr,y+2,28+28,"[r]: rotate left");
+                        mvwprintw(stdscr,y+2,28+50,"[m]: quit");
+
+                        printCentered(stdscr,y+15,"Press any key to turn back");
+                        
+                        
+                        char h=getch();
+
+                        // parte automaticamente ???
+                    }else if(choice==2){
+                        gameOver(true);
+                        this->running=false;
+                    }
+                }while(choice!=0 && running);
+
+                if(running){
+                    //continue the game
+                    wborder(game, ASCII_LEFT_BORDER, ASCII_RIGHT_BORDER, ASCII_TOP_BORDER, ASCII_BOTTOM_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER);
+                    wrefresh(game);
+                }
+                
                 break;
             case 'r':
                 for (int i = 0; i < 4; i++) {
@@ -264,7 +312,6 @@ void Game::show() {
                 block.move(1, 0, this->board);
                 break;
         }
-    
         wrefresh(game);
     }
 }

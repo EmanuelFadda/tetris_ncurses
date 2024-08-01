@@ -101,7 +101,7 @@ void Leaderboard::resetLeaderboard(){
     int n_choices=2;
     
     const char* choices[n_choices]={"[[ CONFIRM ]]", "[[ Exit ]]"};
-    int choice=createMenu(choices,n_choices,10);
+    int choice=createMenu(choices,n_choices,10,"  Want confirm?  ");
     
     if(choice==0){
         deleteScore();
