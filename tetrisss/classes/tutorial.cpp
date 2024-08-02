@@ -1,6 +1,6 @@
 #include <ncurses/ncurses.h>
-#include "headers/tutorial.hpp"
-#include "headers/utilities.hpp"
+#include "../headers/tutorial.hpp"
+#include "../headers/utilities.hpp"
 
 /*
 function: Tutorial
@@ -16,6 +16,12 @@ Tutorial::Tutorial() {
     curs_set(0);
 }
 
+/*
+function: show
+description: display the commands of the game
+
+@return Tutorial:  Tutorial object
+*/
 void Tutorial::show(){
     clear();
     WINDOW *win = newwin(0, 0, 0, 0);
@@ -45,7 +51,12 @@ void Tutorial::show(){
     getch();
     hide();
 }
+/*
+function: hide
+description: ends tutorial window
 
+@return void
+*/
 void Tutorial::hide(){
    endwin();
 }

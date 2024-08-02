@@ -1,12 +1,10 @@
 #include <ncurses/ncurses.h>
 #include <cstring>
-#include "headers/block.hpp"
-#include "headers/utilities.hpp"
-
+#include "../headers/block.hpp"
+#include "../headers/utilities.hpp"
 using namespace std;
 
-const int X_SUB_BLOCK=1,Y_SUB_BLOCK=0;
-const int SUB_BLOCK1=0,SUB_BLOCK2=1,SUB_BLOCK3=2,SUB_BLOCK4=3;
+
 /*
 function: Block
 description: constructor for Block class (block values: 0 for empty, 1 for inactive, 2 for active)
@@ -53,7 +51,7 @@ Block::Block(int y, int x, int type) {
             this->coords[SUB_BLOCK4][X_SUB_BLOCK] = 3;
             break;
         case 2:
-            // [][]         ???
+            // [][]         
             //   [][]
             this->coords[SUB_BLOCK1][Y_SUB_BLOCK] = 0;
             this->coords[SUB_BLOCK1][X_SUB_BLOCK] = 0;
@@ -113,7 +111,7 @@ Block::Block(int y, int x, int type) {
             this->coords[SUB_BLOCK4][X_SUB_BLOCK] = 2;
             break;
         case 6:
-            //     []  ???
+            //     []  
             // [][][]
             this->coords[SUB_BLOCK1][Y_SUB_BLOCK] = 0;
             this->coords[SUB_BLOCK1][X_SUB_BLOCK] = 2;
@@ -160,7 +158,7 @@ description: adds the block to the board matrix with value 2
 @return void
 */
 void Block::add(int board[][10]) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS, i++;) {
         board[this->y + this->coords[i][Y_SUB_BLOCK]][this->x + this->coords[i][X_SUB_BLOCK]] = 2;
     }
 }
@@ -175,32 +173,32 @@ description: rotates the block clockwise or counter-clockwise
 @return void
 */
 void Block::rotate(int board[][10], int direction) {
-    int temp[4][2];
+    int temp[N_SUB_BLOCKS][2];
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
         board[this->y + this->coords[i][Y_SUB_BLOCK]][this->x + this->coords[i][X_SUB_BLOCK]] = 0;
     }
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
         temp[i][Y_SUB_BLOCK] = this->coords[i][Y_SUB_BLOCK];
         temp[i][X_SUB_BLOCK] = this->coords[i][X_SUB_BLOCK];
     }
 
     if (this->checkCollision(board)) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < N_SUB_BLOCKS; i++) {
             this->coords[i][Y_SUB_BLOCK] = temp[i][Y_SUB_BLOCK];
             this->coords[i][X_SUB_BLOCK] = temp[i][X_SUB_BLOCK];
         }
     } else {
         if (direction == 0) {
             // rotate left
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < N_SUB_BLOCKS; i++) {
                 this->coords[i][Y_SUB_BLOCK] = -temp[i][X_SUB_BLOCK];
                 this->coords[i][X_SUB_BLOCK] = temp[i][Y_SUB_BLOCK];
             }
         } else if (direction == 1) {
             // rotate right
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < N_SUB_BLOCKS; i++) {
                 this->coords[i][Y_SUB_BLOCK] = temp[i][X_SUB_BLOCK];
                 this->coords[i][X_SUB_BLOCK] = -temp[i][Y_SUB_BLOCK];
             }
@@ -219,14 +217,14 @@ description: moves the block
 @return void
 */
 void Block::move(int dy, int dx, int board[][10]) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
         board[this->y + this->coords[i][Y_SUB_BLOCK]][this->x + this->coords[i][X_SUB_BLOCK]] = 0;
     }
 
     this->x += dx;
     this->y += dy;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
         board[this->y + this->coords[i][Y_SUB_BLOCK]][this->x + this->coords[i][X_SUB_BLOCK]] = 2;
     }
 }
@@ -240,7 +238,7 @@ description: checks if the block has collided with another (static) block in the
 @return bool: true if the block has collided, false otherwise
 */
 bool Block::checkCollision(int board[][10]) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
         if (this->y + this->coords[i][Y_SUB_BLOCK] < 0 || this->y + this->coords[i][Y_SUB_BLOCK] >= 19) {
             return true;
         }
@@ -269,13 +267,13 @@ description: checks if the block has collided with the walls of the board in ord
 @return bool: true if the block has collided, false otherwise
 */
 bool Block::checkWall(int board[][10], int side) {
-    for (int i = 0; i < 4; i++) {
-        if (side == 0) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
+        if (side == LEFT_BORDER) {
             // left wall
             if (this->x + this->coords[i][X_SUB_BLOCK] == 0) {
                 return true;
             }
-        } else if (side == 1) {
+        } else if (side == RIGHT_BORDER) {
             // right wall
             if (this->x + this->coords[i][X_SUB_BLOCK] == 9) {
                 return true;
@@ -296,7 +294,7 @@ description: adds the block to the board matrix changing the value from 2 to 1 (
 @return void
 */
 void Block::collided(int board[][10]) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < N_SUB_BLOCKS; i++) {
         board[this->y + this->coords[i][Y_SUB_BLOCK]][this->x + this->coords[i][X_SUB_BLOCK]] = 1;
     }
 }

@@ -2,7 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
-#include "headers/utilities.hpp"
+#include "../headers/utilities.hpp"
 
 using namespace std;
 
@@ -41,7 +41,7 @@ void printTable(WINDOW* win, int y, int x, char names[][14], int scores[], int s
     }
 
     mvwprintw(win, y , x,  "         Name           Score   ");
-    //scrive nomi e punteggi
+    //writes name and scores
     mvwprintw(win, y+1 , x, "--------------------------------");
     for (int i = 0; i < size; i++) { 
         char scorestring[6];
@@ -64,13 +64,13 @@ description: loads the scores from the leaderboard file into arrays
 @param int scores[]: array of scores
 @param int& size: size of the arrays
 
-@return void
+@return bool check if scores' file exist
 */
 bool loadScores(char names[][14], int scores[], int& size) {
     ifstream file;
     bool fileExist=file.good();
     if(fileExist){
-        file.open("leaderboard.txt");
+        file.open(URL_FILE_SCORES);
         while (file >> names[size] >> scores[size]) {
             size++;
         }
@@ -79,6 +79,16 @@ bool loadScores(char names[][14], int scores[], int& size) {
     return fileExist;
 }
 
+/*
+function: checkOrderArray
+description: check if the array was ordered
+
+@param int array[]: array to check
+@param int size: size of array
+@param bool ascending : determine which order you want check, ascending=True or discending=False
+
+@return bool  
+*/
 bool checkOrderArray(int array[],int size, bool ascending){
     int i=0;
     bool ordered=true;
@@ -122,7 +132,7 @@ void saveScore(char name[14], int score) {
         //riordina gli elementi all'interno
         orderScore(new_names,new_scores,size);
         ofstream file;
-        file.open("leaderboard.txt");
+        file.open(URL_FILE_SCORES);
         //inserisce nome e punteggio all'interno del file
         for (int i = 0; i < size; i++) {
             file << new_names[i] << " " << new_scores[i] << endl;
@@ -147,16 +157,25 @@ description: generates a random number between min and max
 int random(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
+/*
+function: orderScore
+description: check if the array are ordered by descending based of scores 
 
+@param char names[][14]:  array of names
+@param int scores[]: array of scores
+@param int size: size of scores[] and names[]
+
+@return void
+*/
 void orderScore(char names[][14],int scores[],int size){
     for (int i = 0; i < size; i++) {
         for (int j = i + 1; j < size; j++) {
             if (scores[i] < scores[j]) {
-                //punteggi
+                //scores
                 int temp = scores[i];                    
                 scores[i] = scores[j];
                 scores[j] = temp;
-                //nomi
+                //names
                 char tempname[14];
                 strcpy(tempname, names[i]);
                 strcpy(names[i], names[j]);
@@ -165,9 +184,26 @@ void orderScore(char names[][14],int scores[],int size){
         }
     }
 }
+/*
+function: deleteScore
+description: delete all the scores inside the file scores
+
+@return void
+*/
 void deleteScore(){
-    ofstream file("leaderboard.txt", ofstream::out | ofstream::trunc);
+    ofstream file(URL_FILE_SCORES, ofstream::out | ofstream::trunc);
 }
+
+/*
+function: createMenu
+description: clear the screen to display a centered menù with higlighted title 
+
+@params const char* choices[]: the choices of menù
+@params int n_choices: number of choice
+@params int y: coordinate y of the menù
+@params const char* titleText:
+@return int: rappresent the code of choice, the number is between (0,n_choices-1)
+*/
 int createMenu(const char* choices[], int n_choices, int y,const char* titleText){
     int highlight = 0;
     

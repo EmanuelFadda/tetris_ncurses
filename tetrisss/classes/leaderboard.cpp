@@ -1,11 +1,11 @@
 #include <ncurses/ncurses.h>
 #include <cstring>
 #include <fstream>
-#include "headers/leaderboard.hpp"
-#include "headers/utilities.hpp"
+#include "../headers/leaderboard.hpp"
+#include "../headers/utilities.hpp"
 
 
-const int MAX_TOP_PLAYER=5;
+
 
 /*
 function: Leaderboard
@@ -94,6 +94,12 @@ void Leaderboard::hide() {
     endwin();
 }
 
+/*
+function: resetLeaderboard
+description: display a menù where you can confirm or not if you want delete all your data about scores in this device
+
+@return void
+*/
 void Leaderboard::resetLeaderboard(){
     clear();
 

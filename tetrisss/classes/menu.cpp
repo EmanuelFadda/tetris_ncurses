@@ -1,7 +1,7 @@
 #include <ncurses/ncurses.h>
-#include "headers/menu.hpp"
-#include "headers/game.hpp"
-#include "headers/utilities.hpp"
+#include "../headers/menu.hpp"
+#include "../headers/game.hpp"
+#include "../headers/utilities.hpp"
 #include <string>
 
 

@@ -2,7 +2,6 @@ class Block {
     private: 
         int x;
         int y;
-
     public: 
         int coords[4][2];
         Block(int x, int y, int type);

@@ -1,24 +1,13 @@
 #include <ncurses/ncurses.h>
 #include <cstring>
-#include "headers/game.hpp"
-#include "headers/block.hpp"
-#include "headers/utilities.hpp"
-#include "headers/tutorial.hpp"
+#include "../headers/game.hpp"
+#include "../headers/block.hpp"
+#include "../headers/utilities.hpp"
+#include "../headers/tutorial.hpp"
 using namespace std;
 
-//char used to write a board
-const char ASCII_TOP_BORDER = ' ';
-const char ASCII_BOTTOM_BORDER = '=';
-const char ASCII_LEFT_BORDER = '<';
-const char ASCII_RIGHT_BORDER = '>';
-const char ASCII_CORNER_BORDER = '+';
 
-//int code left,right border
-const int RIGHT_BORDER=1,LEFT_BORDER=0;
 
-const int n_choices=3;
-const char* choices[n_choices]={"[[ Continue ]]","[[ Commands ]]", "[[ Exit ]]"};
-int choice;
 
 
 /*
@@ -123,6 +112,8 @@ void Game::eraseLines(int board[][10]) {
 function: gameOver
 description: displays the game over screen and saves the user's score
 
+@param: bool wasPaused: check if the game was paused before the gameover
+
 @return void
 */
 void Game::gameOver(bool wasPaused) {
@@ -154,7 +145,12 @@ description: displays the game screen and handles user input
 */
 void Game::show() {
     clear();
-    
+
+    //for menù
+    const int n_choices=3;
+    const char* choices[n_choices]={"[[ Continue ]]","[[ Commands ]]", "[[ Exit ]]"};
+    int choice;
+
     Block block = Block(0, 4, random(0, 6));
     block.add(this->board);
     int rand = random(0, 6);
@@ -221,7 +217,7 @@ void Game::show() {
 
         timeout(800);
 
-        int oldCords[4][2]; // store the old coordinates of the block before rotation for collision detection
+        int oldCords[N_SUB_BLOCKS][2]; // store the old coordinates of the block before rotation for collision detection
         // input handling
         // a: move left
         // d: move right
@@ -273,38 +269,42 @@ void Game::show() {
 
                 if(running){
                     //continue the game
-                    wborder(game, ASCII_LEFT_BORDER, ASCII_RIGHT_BORDER, ASCII_TOP_BORDER, ASCII_BOTTOM_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, ASCII_CORNER_BORDER);
+                    wborder(game, 
+                        ASCII_LEFT_BORDER,ASCII_RIGHT_BORDER, 
+                        ASCII_TOP_BORDER, ASCII_BOTTOM_BORDER, 
+                        ASCII_CORNER_BORDER, ASCII_CORNER_BORDER, 
+                        ASCII_CORNER_BORDER, ASCII_CORNER_BORDER);
                     wrefresh(game);
                 }
                 
                 break;
             case 'r':
-                for (int i = 0; i < 4; i++) {
-                    oldCords[i][0] = block.coords[i][0];
-                    oldCords[i][1] = block.coords[i][1];
+                for (int i = 0; i < N_SUB_BLOCKS; i++) {
+                    oldCords[i][Y_SUB_BLOCK] = block.coords[i][Y_SUB_BLOCK];
+                    oldCords[i][X_SUB_BLOCK] = block.coords[i][X_SUB_BLOCK];
                 }
 
                 block.rotate(this->board, 1);
 
                 if (block.checkCollision(this->board)) {
-                    for (int i = 0; i < 4; i++) {
-                        block.coords[i][0] = oldCords[i][0];
-                        block.coords[i][1] = oldCords[i][1];
+                    for (int i = 0; i < N_SUB_BLOCKS; i++) {
+                        block.coords[i][Y_SUB_BLOCK] = oldCords[i][Y_SUB_BLOCK];
+                        block.coords[i][X_SUB_BLOCK] = oldCords[i][X_SUB_BLOCK];
                     }
                 }
                 break;
             case 'q':
-                for (int i = 0; i < 4; i++) {
-                    oldCords[i][0] = block.coords[i][0];
-                    oldCords[i][1] = block.coords[i][1];
+                for (int i = 0; i < N_SUB_BLOCKS; i++) {
+                    oldCords[i][Y_SUB_BLOCK] = block.coords[i][Y_SUB_BLOCK];
+                    oldCords[i][X_SUB_BLOCK] = block.coords[i][X_SUB_BLOCK];
                 }
 
                 block.rotate(this->board, 0);
 
                 if (block.checkCollision(this->board)) {
-                    for (int i = 0; i < 4; i++) {
-                        block.coords[i][0] = oldCords[i][0];
-                        block.coords[i][1] = oldCords[i][1];
+                    for (int i = 0; i < N_SUB_BLOCKS; i++) {
+                        block.coords[i][Y_SUB_BLOCK] = oldCords[i][Y_SUB_BLOCK];
+                        block.coords[i][X_SUB_BLOCK] = oldCords[i][X_SUB_BLOCK];
                     }
                 }
                 break;

@@ -7,12 +7,12 @@ main: main.o game.o block.o menu.o leaderboard.o utilities.o
 all_done: 
 	rm -f main.exe
 	g++ -c main.cpp
-	g++ -c game.cpp
-	g++ -c block.cpp
-	g++ -c menu.cpp
-	g++ -c leaderboard.cpp
-	g++ -c utilities.cpp
-	g++ -c tutorial.cpp
+	g++ -c classes/game.cpp
+	g++ -c classes/block.cpp
+	g++ -c classes/menu.cpp
+	g++ -c classes/leaderboard.cpp
+	g++ -c classes/utilities.cpp
+	g++ -c classes/tutorial.cpp
 	g++ -o main main.o game.o block.o menu.o leaderboard.o utilities.o tutorial.o -lncurses
 	rm *.o
 	
